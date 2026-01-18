@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTasks } from "../contexts/TaskContext";
+import { useEffect } from "react";
 
 export default function AddTaskModal() {
 
@@ -7,9 +8,37 @@ export default function AddTaskModal() {
 
     const [name, setName] = useState("");
     
+    const canSubmit = name;
+    
+    
+        // For allowing escape key to exit form:
+    
+        useEffect(function() {
+            console.log("effect called")
+            function callback(e) {
+                if(e.code === 'Escape') {
+                    handleSetAction("", null)
+                }
+            }
+    
+            document.addEventListener('keydown', callback);
+    
+            return function() {
+                document.removeEventListener('keydown', callback)
+            }
+    
+        }, [handleSetAction])
+
+    
+    function handleSubmit(e) {
+        e.preventDefault(); // No reloading
+        if (canSubmit) {
+            handleAddPerson(name)
+        }
+    }
 
     return (
-        <>
+        <form onSubmit={(e)=>handleSubmit(e)}>
             <div className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-40" aria-hidden="true"></div>
             <div className="fixed inset-0 z-50 flex items-center justify-center">
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-6">
@@ -17,6 +46,7 @@ export default function AddTaskModal() {
                         <div className="flex items-center justify-between px-8 py-6 border-b border-slate-100 dark:border-slate-800">
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white">Add New Person</h3>
                             <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                            type="button"
                                 onClick={()=>handleSetAction("", null)}
                             >
                                 <span className="material-symbols-outlined">close</span>
@@ -36,18 +66,19 @@ export default function AddTaskModal() {
                 
 
                             <button
-                            disabled={!name}
+                            type="submit"
+                            disabled={!canSubmit}
                             className={`flex items-center disabled justify-center gap-2 cursor-pointer rounded-lg h-10 px-5 bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-all shadow-sm
                                     disabled:bg-gray-400 disabled:cursor-not-allowed
                                 `}
                             onClick={()=>{
-                                handleAddPerson(name)
+                                handleSubmit();
                             }}>Add Person</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </>
+        </form>
 
     );
 }

@@ -82,7 +82,6 @@ function TaskProvider({ children }) {
 
         try {
 
-            // First get the other tasks of that user
             const res = await fetch(`${BASE_URL}/tasks/${id}`,
                 {
                     method: 'DELETE',
@@ -103,7 +102,6 @@ function TaskProvider({ children }) {
     async function handleAddPerson(name) {
         try {
 
-            // First get the other tasks of that user
             const res = await fetch(`${BASE_URL}/people`,
                 {
                     method: 'POST',
