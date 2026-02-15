@@ -1,7 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 const TaskContext = createContext();
-const BASE_URL = "http://10.0.0.30:8081"
+
+const currentProtocol = window.location.protocol; // e.g., "https:"
+const currentHostname = window.location.hostname; // e.g., "www.example.com"
+const currentPort = Number(window.location.port) + 1;
+
+const BASE_URL = `${currentProtocol}//${currentHostname}:${currentPort}`
 
 function TaskProvider({ children }) {
     const [taskData, setTaskData] = useState([]);
